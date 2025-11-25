@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TODo-app</title>
+    <!-- favicon: file is stored under logo/ in this repo -->
+    <link rel="icon" type="image/png" href="logo/todofavicon copy.png" />
+    <!-- Google Font for a friendly, enthusiastic look -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="app-header">
+        <!-- repo contains only todofavicon copy.png inside logo/; use it as the header logo -->
+        <img src="logo/todofavicon copy.png" alt="logo" class="logo" />
+        <div>
+          <h1>TODo — Make it happen!</h1>
+          <p class="subtitle">Small wins. Big smiles. ✨</p>
+        </div>
+      </header>
+
+      <section class="new-task">
+        <input
+          id="task-input"
+          type="text"
+          placeholder="What will you conquer today?"
+          aria-label="Add task"
+        />
+        <button id="add-btn" type="button" class="btn primary">Add</button>
+      </section>
+
+      <section class="controls">
+        <div class="stats"><strong id="remaining">0</strong> remaining</div>
+        <div class="filters" role="tablist" aria-label="Filters">
+          <button class="btn filter active" data-filter="all">All</button>
+          <button class="btn filter" data-filter="active">Active</button>
+          <button class="btn filter" data-filter="done">Done</button>
+        </div>
+        <button id="clear-btn" class="btn clear" type="button">
+          Clear completed
+        </button>
+      </section>
+
+      <ul id="task-list" class="task-list" aria-live="polite"></ul>
+
+      <footer class="app-footer">
+        Tip: press Enter to add · Double-click a task to edit · Tasks persist in
+        your browser
+      </footer>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

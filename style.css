@@ -1,0 +1,425 @@
+:root {
+  --bg-1: #ffecd2;
+  --bg-2: #fcb69f;
+  --card: rgba(255, 255, 255, 0.9);
+  --accent: #ff6b6b;
+  --muted: #6b6b6b;
+  --glass: rgba(255, 255, 255, 0.7);
+  --shadow: 0 8px 24px rgba(15, 15, 15, 0.12);
+  /* responsive helpers */
+  --container-max: 1100px;
+  --app-padding: 28px;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  /* Use Nunito from Google Fonts (loaded in index.html) for a friendly tone */
+  font-family: "Nunito", Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+.app {
+  width: 100%;
+  max-width: var(--container-max);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0.8)
+  );
+  border-radius: 18px;
+  padding: var(--app-padding);
+  box-shadow: var(--shadow);
+  position: relative;
+  /* layout: fix header/input/footer and make only the list scroll */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-height: 90vh;
+  overflow: hidden; /* keep scrolling inside .task-list */
+}
+.app::before {
+  content: "";
+  position: absolute;
+  right: -120px;
+  top: -80px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 107, 107, 0.18),
+    transparent 40%
+  );
+  transform: rotate(18deg);
+  /* decorative layer must not intercept pointer events */
+  pointer-events: none;
+}
+.app-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 12px;
+  flex: 0 0 auto;
+}
+.logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  /* gentle float animation */
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px) rotate(-1deg);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* add button temporary pop state (applied by JS) */
+.btn.pop {
+  transform: scale(0.96);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+.app-header h1 {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+  letter-spacing: 0.6px;
+}
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.new-task {
+  display: flex;
+  gap: 10px;
+  margin: 18px 0;
+  align-items: center;
+  flex: 0 0 auto;
+}
+#task-input {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--glass);
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow 150ms ease;
+}
+#task-input:focus {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+.btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  position: relative;
+  z-index: 2;
+}
+.btn.primary {
+  /* Match delete button style, but use green for positive action */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 40px;
+  padding: 8px 14px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(90deg, #30c850, #24b024);
+  border: 0;
+  box-shadow: 0 10px 24px rgba(48, 200, 80, 0.18), 0 2px 6px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  transition: transform 160ms cubic-bezier(0.2, 0.9, 0.3, 1),
+    box-shadow 160ms ease;
+}
+.btn.primary:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 16px 34px rgba(48, 200, 80, 0.22);
+}
+.btn.primary:active {
+  transform: translateY(0) scale(0.98);
+}
+.btn.primary:focus {
+  outline: 3px solid rgba(48, 200, 80, 0.22);
+  outline-offset: 3px;
+}
+/* subtle clear-completed button */
+.btn.clear {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+}
+.btn.clear:hover {
+  background: rgba(255, 90, 90, 0.08);
+  color: #d64545;
+  transform: translateY(-2px);
+}
+.btn.clear:focus {
+  outline: 3px solid rgba(214, 69, 69, 0.12);
+  outline-offset: 3px;
+}
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex: 0 0 auto;
+}
+.filters {
+  display: flex;
+  gap: 8px;
+}
+.filter {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: transparent;
+}
+.filter.active {
+  background: rgba(0, 0, 0, 0.06);
+}
+.filter .count {
+  margin-left: 6px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.stats {
+  color: var(--muted);
+  font-weight: 600;
+}
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+  /* allow the list to scroll when it grows so header remains visible */
+  flex: 1 1 auto;
+  min-height: 0; /* allow proper flex child scrolling */
+  overflow: auto;
+  padding-right: 8px; /* space for scrollbar */
+}
+
+/* nicer small scrollbars (optional) */
+.task-list::-webkit-scrollbar {
+  width: 10px;
+}
+.task-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+}
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.92)
+  );
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(12, 12, 12, 0.04);
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+.task-item .text {
+  flex: 1;
+}
+.task-item.done {
+  /* Completed tasks: muted, subtle tint and clear strike-through */
+  opacity: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(230, 245, 235, 0.8),
+    rgba(245, 250, 245, 0.6)
+  );
+  border-left: 4px solid rgba(36, 176, 36, 0.16);
+}
+.task-item.done .text {
+  text-decoration: line-through;
+  color: var(--muted);
+  font-weight: 600;
+}
+.task-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+}
+.icon-btn.delete {
+  /* Bold, highly-visible delete button for clarity and accessibility */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 40px;
+  padding: 8px 14px;
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  /* strong red gradient for clear delete affordance */
+  background: linear-gradient(90deg, #ff3b30, #e02424);
+  border: 0;
+  box-shadow: 0 10px 24px rgba(255, 59, 59, 0.18), 0 2px 6px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  transition: transform 160ms cubic-bezier(0.2, 0.9, 0.3, 1),
+    box-shadow 160ms ease;
+}
+.icon-btn.delete:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 16px 34px rgba(255, 59, 59, 0.22);
+}
+.icon-btn.delete:active {
+  transform: translateY(0) scale(0.98);
+}
+.icon-btn.delete:focus {
+  outline: 3px solid rgba(255, 107, 107, 0.22);
+  outline-offset: 3px;
+}
+.check {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.new-pulse {
+  animation: pop 260ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.app-footer {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+/* responsive rules */
+@media (max-width: 900px) {
+  :root {
+    --app-padding: 20px;
+  }
+  .app {
+    padding: var(--app-padding);
+  }
+  .logo {
+    width: 56px;
+    height: 56px;
+  }
+  .task-item {
+    padding: 10px;
+  }
+  #task-input {
+    padding: 10px;
+  }
+  .btn.primary,
+  .icon-btn.delete {
+    height: 36px;
+    min-width: 40px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 520px) {
+  .app {
+    padding: 14px;
+  }
+  .logo {
+    width: 48px;
+    height: 48px;
+  }
+  /* stack add controls on narrow screens */
+  .new-task {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #task-input {
+    width: 100%;
+  }
+  #add-btn {
+    width: 100%;
+    margin-top: 8px;
+  }
+  .filters {
+    overflow-x: auto;
+    gap: 6px;
+  }
+  .task-actions {
+    margin-left: 0;
+    gap: 10px;
+  }
+  .task-item {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+@media (max-width: 380px) {
+  :root {
+    --app-padding: 12px;
+  }
+  .app {
+    padding: 12px;
+  }
+  .app-header h1 {
+    font-size: 1.1rem;
+  }
+  .task-item {
+    padding: 10px;
+  }
+  .btn.primary,
+  .icon-btn.delete {
+    font-size: 15px;
+    height: 36px;
+  }
+}
